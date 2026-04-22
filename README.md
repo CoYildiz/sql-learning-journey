@@ -2,14 +2,15 @@
 
 This repository contains my SQL learning notes and projects.
 
-## 📚 Notes
+##  Notes
 - Basic SQL concepts
 - Intermediate SQL queries
 - Examples and explanations
 
-## 💻 Projects
-- Sales Data Analysis
-- Network Traffic Analysis
+##  Projects
 
-## 🎯 Goal
+Empty
+
+
+##  Goal
 To improve my SQL skills by learning, practicing, and teaching.
