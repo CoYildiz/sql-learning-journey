@@ -1,0 +1,102 @@
+#+PROPERTY: header-args:sql :engine postgres :dbhost "localhost" :dbport 5433 :dbuser "co" :database "exercises"
+This file contains questions and my approach from [[https://pgexercises.com/][postgresql execises]].
+*** emacs icin bazi ayarlar
+Bu kisim uygulamam icin bazi ayarlari icermekte olup deneme yapmam icin vardir konudan bagimsizdir.
+#+BEGIN_SRC sql :engine postgres :dbhost "localhost" :dbport 5433 :dbuser "co" :database "exercises"
+SELECT * FROM cd.members LIMIT 5;
+#+END_SRC
+
+#+RESULTS:
+| memid | surname  | firstname | address                      | zipcode | telephone      | recommendedby | joindate            |
+|-------+----------+-----------+------------------------------+---------+----------------+---------------+---------------------|
+|     0 | GUEST    | GUEST     | GUEST                        |       0 | (000) 000-0000 |               | 2012-07-01 00:00:00 |
+|     1 | Smith    | Darren    | 8 Bloomsbury Close, Boston   |    4321 | 555-555-5555   |               | 2012-07-02 12:02:05 |
+|     2 | Smith    | Tracy     | 8 Bloomsbury Close, New York |    4321 | 555-555-5555   |               | 2012-07-02 12:08:23 |
+|     3 | Rownam   | Tim       | 23 Highway Way, Boston       |   23423 | (844) 693-0723 |               | 2012-07-03 09:32:15 |
+|     4 | Joplette | Janice    | 20 Crossing Road, New York   |     234 | (833) 942-4710 |             1 | 2012-07-03 10:25:05 |
+
+#+begin_src sql 
+select * from cd.members limit 2;
+#+end_src
+
+#+RESULTS:
+| memid | surname | firstname | address                    | zipcode | telephone      | recommendedby | joindate            |
+|-------+---------+-----------+----------------------------+---------+----------------+---------------+---------------------|
+|     0 | GUEST   | GUEST     | GUEST                      |       0 | (000) 000-0000 |               | 2012-07-01 00:00:00 |
+|     1 | Smith   | Darren    | 8 Bloomsbury Close, Boston |    4321 | 555-555-5555   |               | 2012-07-02 12:02:05 |
+
+* Basic
+** Retrieve everything from a table
+*** Question
+
+How can you retrieve all the information from the cd.facilities table? 
+*** EDA
+Önce tablonun sütun isimlerini ve veri tiplerini kontrol edelim:
+
+#+BEGIN_SRC sql
+-- Tablo yapısını inceleme
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'facilities' AND table_schema = 'cd';
+#+END_SRC
+
+#+RESULTS:
+| column_name         | data_type          |
+|--------------------+-------------------|
+| facid              | integer           |
+| name               | character varying |
+| membercost         | numeric           |
+| guestcost          | numeric           |
+| initialoutlay      | numeric           |
+| monthlymaintenance | numeric           |
+
+Şimdi de verinin nasıl göründüğüne dair ilk 3 satıra bakalım:
+
+#+BEGIN_SRC sql
+SELECT * FROM cd.facilities LIMIT 3;
+#+END_SRC
+
+#+RESULTS:
+| facid | name            | membercost | guestcost | initialoutlay | monthlymaintenance |
+|-------+-----------------+------------+-----------+---------------+--------------------|
+|     0 | Tennis Court 1  |          5 |        25 |         10000 |                200 |
+|     1 | Tennis Court 2  |          5 |        25 |          8000 |                200 |
+|     2 | Badminton Court |          0 |      15.5 |          4000 |                 50 |
+
+Expected Results
+
+  facid  name  membercost  guestcost  initialoutlay  monthlymaintenance    
+  0  Tennis Court 1  5  25  10000  200    
+  1  Tennis Court 2  5  25  8000  200    
+  2  Badminton Court  0  15.5  4000  50    
+  3  Table Tennis  0  5  320  10    
+  4  Massage Room 1  35  80  4000  3000    
+  5  Massage Room 2  35  80  4000  3000    
+  6  Squash Court  3.5  17.5  5000  80    
+  7  Snooker Table  0  5  450  15    
+  8  Pool Table  0  5  400  15    
+
+** Retrieve specific columns from a table
+*** Question
+
+You want to print out a list of all of the facilities and their cost to members. How would you retrieve a
+list of only facility names and costs? 
+*** EDA
+#+begin_src sql
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'facilities'
+#+end_src
+
+#+RESULTS:
+| column_name         | data_type          |
+|--------------------+-------------------|
+| facid              | integer           |
+| membercost         | numeric           |
+| guestcost          | numeric           |
+| initialoutlay      | numeric           |
+| monthlymaintenance | numeric           |
+| name               | character varying |
+*** Query
+
+*** Expected Results

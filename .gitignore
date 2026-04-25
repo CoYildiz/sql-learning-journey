@@ -1,1 +1,13 @@
-notes/.backups/
+# Emacs geçici dosyaları
+# .# dosya-adi (lock files)
+.#*
+# #dosya-adi# (auto-save)
+\#*#
+
+# Yedekleme dosyaları
+*.org.~*
+.backups/
+
+# Vim geçici dosyaları
+*.swp
+*.swo
