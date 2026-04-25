@@ -1,4 +1,9 @@
 #+PROPERTY: header-args:sql :engine postgres :dbhost "localhost" :dbport 5433 :dbuser "co" :database "exercises"
+#+TITLE: SQL Learning Journey - PGExercises Solutions
+#+AUTHOR: Co
+#+DESCRIPTION: Solutions for exercises found at https://pgexercises.com/
+#+OPTIONS: toc:nil num:nil
+
 This file contains questions and my approach from [[https://pgexercises.com/][postgresql execises]].
 *** emacs icin bazi ayarlar
 Bu kisim uygulamam icin bazi ayarlari icermekte olup deneme yapmam icin vardir konudan bagimsizdir.
@@ -81,6 +86,7 @@ Expected Results
 
 You want to print out a list of all of the facilities and their cost to members. How would you retrieve a
 list of only facility names and costs? 
+
 *** EDA
 #+begin_src sql
 SELECT column_name, data_type
@@ -98,5 +104,99 @@ WHERE table_name = 'facilities'
 | monthlymaintenance | numeric           |
 | name               | character varying |
 *** Query
+#+BEGIN_SRC sql :results table
+SELECT name, membercost FROM cd.facilities;
+#+END_SRC
+
+#+RESULTS:
+| name            | membercost |
+|-----------------+------------|
+| Tennis Court 1  |          5 |
+| Tennis Court 2  |          5 |
+| Badminton Court |          0 |
+| Table Tennis    |          0 |
+| Massage Room 1  |         35 |
+| Massage Room 2  |         35 |
+| Squash Court    |        3.5 |
+| Snooker Table   |          0 |
+| Pool Table      |          0 |
 
 *** Expected Results
+  name  membercost    
+  Tennis Court 1  5    
+  Tennis Court 2  5    
+  Badminton Court  0    
+  Table Tennis  0    
+  Massage Room 1  35    
+  Massage Room 2  35    
+  Squash Court  3.5    
+  Snooker Table  0    
+  Pool Table  0    
+** Control which rows are retrieved
+*** Question
+How can you produce a list of facilities that charge a fee to members?
+
+*** EDA
+#+begin_src sql
+SELECT 
+    table_name, 
+    column_name, 
+    data_type, 
+    is_nullable
+FROM information_schema.columns
+WHERE table_schema = 'cd' 
+  AND table_name IN ('members', 'bookings', 'facilities')
+ORDER BY table_name, ordinal_position;
+#+end_src
+
+#+RESULTS:
+| table_name  | column_name         | data_type                    | is_nullable |
+|------------+--------------------+-----------------------------+------------|
+| bookings   | bookid             | integer                     | NO         |
+| bookings   | facid              | integer                     | NO         |
+| bookings   | memid              | integer                     | NO         |
+| bookings   | starttime          | timestamp without time zone | NO         |
+| bookings   | slots              | integer                     | NO         |
+| facilities | facid              | integer                     | NO         |
+| facilities | name               | character varying           | NO         |
+| facilities | membercost         | numeric                     | NO         |
+| facilities | guestcost          | numeric                     | NO         |
+| facilities | initialoutlay      | numeric                     | NO         |
+| facilities | monthlymaintenance | numeric                     | NO         |
+| members    | memid              | integer                     | NO         |
+| members    | surname            | character varying           | NO         |
+| members    | firstname          | character varying           | NO         |
+| members    | address            | character varying           | NO         |
+| members    | zipcode            | integer                     | NO         |
+| members    | telephone          | character varying           | NO         |
+| members    | recommendedby      | integer                     | YES        |
+| members    | joindate           | timestamp without time zone | NO         |
+#+begin_src sql
+SELECT
+    tc.table_name AS tablo,
+    kcu.column_name AS kolon,
+    tc.constraint_type AS anahtar_tipi,
+    ccu.table_name AS referans_tablo,
+    ccu.column_name AS referans_kolon
+FROM information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu
+  ON tc.constraint_name = kcu.constraint_name
+  AND tc.table_schema = kcu.table_schema
+LEFT JOIN information_schema.constraint_column_usage AS ccu
+  ON ccu.constraint_name = tc.constraint_name
+WHERE tc.table_schema = 'cd'
+  AND tc.table_name IN ('members', 'bookings', 'facilities')
+  AND tc.constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY')
+ORDER BY tc.table_name, tc.constraint_type DESC;
+#+end_src
+
+#+RESULTS:
+| tablo      | kolon         | anahtar_tipi | referans_tablo | referans_kolon |
+|------------+---------------+-------------+---------------+---------------|
+| bookings   | bookid        | PRIMARY KEY | bookings      | bookid        |
+| bookings   | facid         | FOREIGN KEY | facilities    | facid         |
+| bookings   | memid         | FOREIGN KEY | members       | memid         |
+| facilities | facid         | PRIMARY KEY | facilities    | facid         |
+| members    | memid         | PRIMARY KEY | members       | memid         |
+| members    | recommendedby | FOREIGN KEY | members       | memid         |
+

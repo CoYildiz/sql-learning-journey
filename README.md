@@ -9,7 +9,10 @@ This repository contains my SQL learning notes and projects.
 
 ##  Projects
 
-Empty
+
+## projects/pgexercises dosyasindaki Kaynaklar
+Bu projedeki SQL alıştırmaları ve veritabanı şeması [PGExercises](https://pgexercises.com/) üzerinden alınmıştır. 
+Tüm hakları ilgili platforma aittir.
 
 
 ##  Goal
