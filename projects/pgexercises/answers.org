@@ -1,4 +1,4 @@
-#+PROPERTY: header-args:sql :engine postgres :dbhost "localhost" :dbport 5433 :dbuser "co" :database "exercises"
+#+PROPERTY: header-args:sql :engine postgres :dbhost "localhost" :dbport 5432 :dbuser "co" :database "pgexercises"
 #+TITLE: SQL Learning Journey - PGExercises Solutions
 #+AUTHOR: Co
 #+DESCRIPTION: Solutions for exercises found at https://pgexercises.com/
@@ -7,7 +7,16 @@
 This file contains questions and my approach from [[https://pgexercises.com/][postgresql execises]].
 *** emacs icin bazi ayarlar
 Bu kisim uygulamam icin bazi ayarlari icermekte olup deneme yapmam icin vardir konudan bagimsizdir.
-#+BEGIN_SRC sql :engine postgres :dbhost "localhost" :dbport 5433 :dbuser "co" :database "exercises"
+#+begin_src sql
+SELECT current_database();
+#+end_src
+
+#+RESULTS:
+| current_database |
+|-----------------|
+| pgexercises     |
+
+#+BEGIN_SRC sql 
 SELECT * FROM cd.members LIMIT 5;
 #+END_SRC
 
@@ -68,18 +77,6 @@ SELECT * FROM cd.facilities LIMIT 3;
 |     1 | Tennis Court 2  |          5 |        25 |          8000 |                200 |
 |     2 | Badminton Court |          0 |      15.5 |          4000 |                 50 |
 
-Expected Results
-
-  facid  name  membercost  guestcost  initialoutlay  monthlymaintenance    
-  0  Tennis Court 1  5  25  10000  200    
-  1  Tennis Court 2  5  25  8000  200    
-  2  Badminton Court  0  15.5  4000  50    
-  3  Table Tennis  0  5  320  10    
-  4  Massage Room 1  35  80  4000  3000    
-  5  Massage Room 2  35  80  4000  3000    
-  6  Squash Court  3.5  17.5  5000  80    
-  7  Snooker Table  0  5  450  15    
-  8  Pool Table  0  5  400  15    
 
 ** Retrieve specific columns from a table
 *** Question
@@ -121,17 +118,7 @@ SELECT name, membercost FROM cd.facilities;
 | Snooker Table   |          0 |
 | Pool Table      |          0 |
 
-*** Expected Results
-  name  membercost    
-  Tennis Court 1  5    
-  Tennis Court 2  5    
-  Badminton Court  0    
-  Table Tennis  0    
-  Massage Room 1  35    
-  Massage Room 2  35    
-  Squash Court  3.5    
-  Snooker Table  0    
-  Pool Table  0    
+
 ** Control which rows are retrieved
 *** Question
 How can you produce a list of facilities that charge a fee to members?
@@ -190,8 +177,8 @@ WHERE tc.table_schema = 'cd'
 ORDER BY tc.table_name, tc.constraint_type DESC;
 #+end_src
 
-#+RESULTS:
-| tablo      | kolon         | anahtar_tipi | referans_tablo | referans_kolon |
+#+Results:
+| Tablo      | Kolon         | anahtar_tipi | referans_tablo | referans_kolon |
 |------------+---------------+-------------+---------------+---------------|
 | bookings   | bookid        | PRIMARY KEY | bookings      | bookid        |
 | bookings   | facid         | FOREIGN KEY | facilities    | facid         |
@@ -200,3 +187,8 @@ ORDER BY tc.table_name, tc.constraint_type DESC;
 | members    | memid         | PRIMARY KEY | members       | memid         |
 | members    | recommendedby | FOREIGN KEY | members       | memid         |
 
+
+*** Query
+#+begin_src sql
+
+#+end_src
